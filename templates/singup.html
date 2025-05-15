@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Singup</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css">
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg bg-danger  navbar-danger ">
+        <div class="container">
+          <a class="navbar-brand" href="#"><img src="/myapp/static/img/logo.flg.png" alt="el logo"></a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="/">Inicio</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/signin">Ingresar</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Nosotros</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+<main class="container py-3">
+    <div class="row">
+    <div class="col-md-4 offset-md-4 mt-5">
+    <section class="card card-body">
+    <h1 class="display-1">Registro</h1>
+    {{error}}
+
+    <form method="POST">
+    {% csrf_token %}
+
+    <div class="mb-3">
+        <label for="username">username: </label>
+        <input type="text" name="username" class="form-control" placeholder="Escriba su nombre de usuario">
+    </div>
+
+    <div class="mb-3">
+        <label for="password1">password: </label>
+        <input type="password" name="password1" id="password1" class="form-control" placeholder="Escribe tu contraseña">
+    </div>
+
+    <div class="mb-3">
+        <label for="password2">Confirme su contraseña: </label>
+        <input type="text" name="password2" id="password2" class="form-control" placeholder="Confirme su contraseña">
+    </div>
+
+    <div class="text-center">
+    <button class="btn btn-danger">
+        Registrar
+    </button>
+    </div>
+</form>
+</section>
+</div>
+</div>
+</main>
+    
+</body>
+</html>
+

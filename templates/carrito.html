@@ -1,0 +1,8 @@
+<h2>Carrito de Pedido</h2>
+<ul>
+  {% for item in items %}
+    <li>{{ item.plato.nombre }} - {{ item.get_dia_semana_display }} - {{ item.cantidad }}</li>
+  {% empty %}
+    <li>No has agregado platos aún.</li>
+  {% endfor %}
+</ul>
