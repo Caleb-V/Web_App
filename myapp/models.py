@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
+from django.core.validators import EmailValidator
 
 # -------------------- MODELO CLIENTE --------------------
 class Cliente(models.Model):
@@ -11,6 +12,8 @@ class Cliente(models.Model):
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
     empresa = models.ForeignKey('Empresa', on_delete=models.CASCADE, null=True, blank=True)
     celular = models.CharField(max_length=20, blank=True, null=True)
+    dni = models.CharField("NIE/DNI", max_length=30, blank=True, null=True)
+    correo = models.EmailField("Correo electrónico", validators=[EmailValidator()], null=True, blank=True)
 
     def __str__(self):
          return f"{self.Nombre_Completo} - {self.empresa.nombre}"
@@ -101,3 +104,17 @@ class ReciboItem(models.Model):
 
     def __str__(self):
         return f"{self.cantidad} x {self.plato.nombre}"
+
+# models.py
+
+class PedidoHistorico(models.Model):
+    DIAS_SEMANA = CarritoItem.DIAS_SEMANA  # reutilizamos los mismos días
+
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    plato = models.ForeignKey(Plato, on_delete=models.CASCADE)
+    cantidad = models.PositiveIntegerField(default=1)
+    dia_semana = models.CharField(max_length=3, choices=DIAS_SEMANA)
+    fecha_emision = models.DateField(auto_now_add=True)  # fecha del pedido
+
+    def __str__(self):
+        return f"{self.cantidad} x {self.plato.nombre} - {self.usuario.username} ({self.get_dia_semana_display()}) {self.fecha_emision}"

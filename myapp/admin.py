@@ -1,6 +1,8 @@
 from django.contrib import admin
-from .models import Cliente, Empresa, Plato, DisponibilidadPlato, CarritoItem, Recibo, ReciboItem
+from .models import Cliente, Empresa, Plato, DisponibilidadPlato, CarritoItem, Recibo, ReciboItem, PedidoHistorico
 from .forms import DisponibilidadPlatoForm, CarritoItemForm
+import pandas as pd
+from django.http import HttpResponse
 
 class DisponibilidadPlatoAdmin(admin.ModelAdmin):
     form = DisponibilidadPlatoForm
@@ -19,6 +21,53 @@ class CarritoItemAdmin(admin.ModelAdmin):
 class myappAdmin(admin.ModelAdmin):
     readonly_fields = ("Creacion_cuenta",)
 
+def exportar_pedidohistorico_excel(modeladmin, request, queryset):
+    # Vamos a tomar solo los pedidos seleccionados (queryset)
+    # Si quieres que exporte todos los pedidos, cambia queryset por PedidoHistorico.objects.all()
+
+    data = []
+    for pedido in queryset.select_related('plato'):
+        data.append({
+            'Dia': pedido.get_dia_semana_display(),
+            'Plato': pedido.plato.nombre,
+            'Cantidad': pedido.cantidad,
+        })
+
+    df = pd.DataFrame(data)
+
+    # Crear tabla pivote donde filas son días y columnas platos
+    tabla_pivot = pd.pivot_table(
+        df,
+        index='Dia',
+        columns='Plato',
+        values='Cantidad',
+        aggfunc='sum',
+        fill_value=0
+    ).reset_index()
+
+    # Ordenar días de la semana
+    dias_orden = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo']
+    tabla_pivot['Dia'] = pd.Categorical(tabla_pivot['Dia'], categories=dias_orden, ordered=True)
+    tabla_pivot = tabla_pivot.sort_values('Dia')
+
+    # Crear respuesta HTTP con Excel
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename=pedido_historico.xlsx'
+
+    with pd.ExcelWriter(response, engine='openpyxl') as writer:
+        tabla_pivot.to_excel(writer, index=False, sheet_name='Pedidos')
+
+    return response
+
+exportar_pedidohistorico_excel.short_description = "Exportar pedidos históricos seleccionados a Excel"
+
+class PedidoHistoricoAdmin(admin.ModelAdmin):
+    list_display = ['usuario', 'plato', 'cantidad', 'dia_semana', 'fecha_emision']
+    actions = [exportar_pedidohistorico_excel]
+
+
+
+
 # Registros estándar
 admin.site.register(Cliente, myappAdmin)
 admin.site.register(Empresa)
@@ -27,3 +76,4 @@ admin.site.register(DisponibilidadPlato, DisponibilidadPlatoAdmin)  # Usando el 
 admin.site.register(CarritoItem, CarritoItemAdmin)
 admin.site.register(Recibo)
 admin.site.register(ReciboItem)
+admin.site.register(PedidoHistorico, PedidoHistoricoAdmin)

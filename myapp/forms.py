@@ -6,11 +6,13 @@ from django.core.exceptions import ValidationError
 class Cliente_creacion(ModelForm):
     class Meta:
         model = Cliente
-        fields = ['Nombre_Completo', 'descripcion', 'celular', 'empresa']
+        fields = ['Nombre_Completo', 'descripcion', 'celular', 'dni', 'correo', 'empresa']
         widgets = {
             'Nombre_Completo': forms.TextInput(attrs={'class': 'form-control'}),
             'descripcion': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
             'celular': forms.TextInput(attrs={'class': 'form-control'}),
+            'dni': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese su NIE o DNI'}),
+            'correo': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese su correo electrónico'}),
             'empresa': forms.Select(attrs={'class': 'form-select'}),
         }
 

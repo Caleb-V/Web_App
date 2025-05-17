@@ -28,6 +28,7 @@ urlpatterns = [
     path('logout/', views.signout, name='logout'),
     path('signin/', views.signin, name='signin'),
     path('info/', views.create_cliente, name='create_cliente'),
+    path('procesar-pago/', views.procesar_pago, name='procesar_pago'),
     path('pago/', views.pago, name='pago'),
     path('eliminar-item/<int:item_id>/', views.eliminar_carrito_item, name='eliminar_item'),
 

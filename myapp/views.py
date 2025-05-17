@@ -4,9 +4,12 @@ from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
 from django.db import IntegrityError
 from .forms import Cliente_creacion
-from .models import Plato, DisponibilidadPlato, CarritoItem, Cliente
+from .models import Plato, DisponibilidadPlato, CarritoItem, Cliente,  Recibo, ReciboItem, Empresa, PedidoHistorico
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
+from django.db import transaction
+from django.contrib import messages
+from django.utils import timezone
 
 # Create your views here.
 
@@ -136,8 +139,19 @@ def main(request):
 # ----------PAGO------------
 @login_required(login_url='signin')
 def pago(request):
-    # Más adelante aquí puedes integrar lógica de pago real
-    return render(request, 'pago.html')
+    recibo_id = request.session.get('recibo_id')
+
+    if not recibo_id:
+        messages.error(request, "No se encontró ningún recibo.")
+        return redirect('main')
+
+    recibo = get_object_or_404(Recibo, id=recibo_id, usuario=request.user)
+    items = ReciboItem.objects.filter(recibo=recibo)
+
+    return render(request, 'pago.html', {
+        'recibo': recibo,
+        'items': items,
+    })
 
 #----- Eliminar_seleccion -----
 
@@ -147,3 +161,56 @@ def eliminar_carrito_item(request, item_id):
     item = get_object_or_404(CarritoItem, id=item_id, usuario=request.user)
     item.delete()
     return redirect('main')
+
+
+# Prueba
+
+@login_required
+@transaction.atomic
+def procesar_pago(request):
+    usuario = request.user
+    carrito_items = CarritoItem.objects.filter(usuario=usuario)
+
+    if not carrito_items.exists():
+        messages.warning(request, "Tu carrito está vacío.")
+        return redirect('main')
+
+    total = sum(item.plato.precio * item.cantidad for item in carrito_items)
+
+    try:
+        cliente = Cliente.objects.get(usuario=usuario)
+        empresa = cliente.empresa
+    except Cliente.DoesNotExist:
+        empresa = None
+
+    recibo = Recibo.objects.create(
+        usuario=usuario,
+        empresa=empresa,
+        total=total
+    )
+
+    for item in carrito_items:
+        ReciboItem.objects.create(
+            recibo=recibo,
+            plato=item.plato,
+            cantidad=item.cantidad,
+            precio_unitario=item.plato.precio
+        )
+
+    # Aquí creamos los registros en PedidoHistorico sin pasar fecha_emision
+    historico_items = [
+        PedidoHistorico(
+            usuario=item.usuario,
+            plato=item.plato,
+            cantidad=item.cantidad,
+            dia_semana=item.dia_semana
+        ) for item in carrito_items
+    ]
+    PedidoHistorico.objects.bulk_create(historico_items)
+
+    carrito_items.delete()
+
+    request.session['recibo_id'] = recibo.id
+
+    return redirect('pago')
+
