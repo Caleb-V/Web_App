@@ -61,9 +61,43 @@ def exportar_pedidohistorico_excel(modeladmin, request, queryset):
 
 exportar_pedidohistorico_excel.short_description = "Exportar pedidos históricos seleccionados a Excel"
 
+def exportar_datos_envio_excel(modeladmin, request, queryset):
+    data = []
+
+    for pedido in queryset.select_related('usuario', 'plato'):
+        try:
+            cliente = Cliente.objects.get(usuario=pedido.usuario)
+            empresa = cliente.empresa
+        except Cliente.DoesNotExist:
+            cliente = None
+            empresa = None
+
+        data.append({
+            'Nombre del Usuario': cliente.Nombre_Completo if cliente else pedido.usuario.username,
+            'Celular': cliente.celular if cliente else '',
+            'Empresa': empresa.nombre if empresa else '',
+            'Dirección': empresa.direccion if empresa else '',
+            'Plato': pedido.plato.nombre,
+            'Cantidad': pedido.cantidad,
+            'Día': pedido.get_dia_semana_display(),
+        })
+
+    df = pd.DataFrame(data)
+
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename=datos_envio.xlsx'
+
+    with pd.ExcelWriter(response, engine='openpyxl') as writer:
+        df.to_excel(writer, index=False, sheet_name='Datos de Envío')
+
+    return response
+
+exportar_datos_envio_excel.short_description = "Exportar datos de envío seleccionados a Excel"
+
+
 class PedidoHistoricoAdmin(admin.ModelAdmin):
     list_display = ['usuario', 'plato', 'cantidad', 'dia_semana', 'fecha_emision']
-    actions = [exportar_pedidohistorico_excel]
+    actions = [exportar_pedidohistorico_excel, exportar_datos_envio_excel]
 
 
 
