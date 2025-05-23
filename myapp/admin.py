@@ -75,8 +75,11 @@ def exportar_datos_envio_excel(modeladmin, request, queryset):
         data.append({
             'Nombre del Usuario': cliente.Nombre_Completo if cliente else pedido.usuario.username,
             'Celular': cliente.celular if cliente else '',
-            'Empresa': empresa.nombre if empresa else '',
-            'Dirección': empresa.direccion if empresa else '',
+            'Empresa': empresa.nombre if empresa else ('Particular' if cliente and cliente.es_particular else ''),
+            'Dirección': (
+                cliente.direccion_particular if cliente and cliente.es_particular
+                else (empresa.direccion if empresa else '')
+            ),
             'Plato': pedido.plato.nombre,
             'Cantidad': pedido.cantidad,
             'Día': pedido.get_dia_semana_display(),
@@ -105,7 +108,14 @@ class PedidoHistoricoAdmin(admin.ModelAdmin):
 # Registros estándar
 admin.site.register(Cliente, myappAdmin)
 admin.site.register(Empresa)
-admin.site.register(Plato)
+
+@admin.register(Plato)
+class PlatoAdmin(admin.ModelAdmin):
+    list_display = ('codigo','nombre', 'grupo', 'precio', 'precio_sin_iva', 'estado')
+    list_filter = ('grupo', 'estado')
+    search_fields = ('nombre', 'ingredientes', 'alergenos')
+    readonly_fields = ('precio_sin_iva',)
+
 admin.site.register(DisponibilidadPlato, DisponibilidadPlatoAdmin)  # Usando el admin personalizado
 admin.site.register(CarritoItem, CarritoItemAdmin)
 admin.site.register(Recibo)

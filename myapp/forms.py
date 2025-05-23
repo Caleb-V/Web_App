@@ -3,18 +3,28 @@ from .models import Cliente, DisponibilidadPlato, Plato, CarritoItem
 from django import forms
 from django.core.exceptions import ValidationError
 
-class Cliente_creacion(ModelForm):
+class Cliente_creacion(forms.ModelForm):
     class Meta:
         model = Cliente
-        fields = ['Nombre_Completo', 'descripcion', 'celular', 'dni', 'correo', 'empresa']
+        fields = ['Nombre_Completo', 'es_particular', 'direccion_particular', 'celular', 'dni', 'correo', 'empresa']
         widgets = {
             'Nombre_Completo': forms.TextInput(attrs={'class': 'form-control'}),
-            'descripcion': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
+            'es_particular': forms.CheckboxInput(attrs={'class': 'form-check-input', 'id': 'id_es_particular'}),
+            'direccion_particular': forms.Textarea(attrs={
+                'class': 'form-control', 
+                'rows': 3, 
+                'placeholder': 'Dirección si es particular',
+                'id': 'id_direccion_particular'
+            }),
             'celular': forms.TextInput(attrs={'class': 'form-control'}),
             'dni': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese su NIE o DNI'}),
             'correo': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese su correo electrónico'}),
-            'empresa': forms.Select(attrs={'class': 'form-select'}),
+            'empresa': forms.Select(attrs={'class': 'form-select', 'id': 'id_empresa'}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['empresa'].required = False
 
 # --------------- PLATO DISPONIBILIDAD----------
 

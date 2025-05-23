@@ -2,41 +2,82 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
 from django.core.validators import EmailValidator
+from decimal import Decimal
 
 # -------------------- MODELO CLIENTE --------------------
 class Cliente(models.Model):
     Nombre_Completo = models.CharField(max_length=100)
-    descripcion = models.TextField(blank=True)
     Creacion_cuenta = models.DateTimeField(auto_now_add=True)
     importante = models.BooleanField(default=False)
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
     empresa = models.ForeignKey('Empresa', on_delete=models.CASCADE, null=True, blank=True)
+    es_particular = models.BooleanField(default=False)  # Nuevo campo
+    direccion_particular = models.TextField(blank=True, null=True)  # Nuevo campo
     celular = models.CharField(max_length=20, blank=True, null=True)
     dni = models.CharField("NIE/DNI", max_length=30, blank=True, null=True)
     correo = models.EmailField("Correo electrónico", validators=[EmailValidator()], null=True, blank=True)
 
     def __str__(self):
-         return f"{self.Nombre_Completo} - {self.empresa.nombre}"
+        if self.es_particular:
+            return f"{self.Nombre_Completo} - Particular"
+        else:
+            return f"{self.Nombre_Completo} - {self.empresa.nombre if self.empresa else 'Sin empresa'}"
 
 # -------------------- MODELO EMPRESA --------------------
 class Empresa(models.Model):
+    codigo = models.CharField(max_length=50, unique=True)  # nuevo campo código, único
     nombre = models.CharField(max_length=100)
-    direccion = models.TextField(blank=True, null=True)
-    nit = models.CharField(max_length=20, unique=True)
-    telefono = models.CharField(max_length=20, blank=True, null=True)
+    direccion = models.TextField("Dirección de entrega", blank=True, null=True)
+    cif = models.CharField("CIF", max_length=20, unique=True)
 
     def __str__(self):
-        return self.nombre
+        return f"{self.nombre} - {self.direccion}"
 
 # -------------------- MODELO PLATO --------------------
 class Plato(models.Model):
+    codigo = models.CharField(max_length=50, unique=True)  # nuevo campo código, único
     nombre = models.CharField(max_length=100)
     descripcion = models.TextField(blank=True)
     precio = models.DecimalField(max_digits=8, decimal_places=2)
     imagen = models.ImageField(upload_to='platos/', blank=True, null=True)
 
+    kilogramos = models.DecimalField(max_digits=5, decimal_places=2, default=0.5)
+
+    GRUPOS_CHOICES = [
+        ('CARNE', 'Carnes'),
+        ('VERDURA', 'Verduras'),
+        ('PESCADO', 'Pescados'),
+        ('OTROS', 'Otros'),
+    ]
+    grupo = models.CharField(max_length=20, choices=GRUPOS_CHOICES, default='OTROS')
+
+    ingredientes = models.TextField(blank=True, help_text="Lista de ingredientes del plato")
+    alergenos = models.TextField(blank=True, help_text="Alergenos presentes en el plato")
+    vida_util = models.CharField(max_length=100, default="5 días")
+
+    precio_sin_iva = models.DecimalField(max_digits=6, decimal_places=2, default=5.99)
+
+    calorias = models.IntegerField(help_text="Cantidad de calorías", null=True, blank=True)
+    proteinas = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    grasa = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    carbohidratos = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    sodio = models.DecimalField(max_digits=6, decimal_places=2, null=True, blank=True)
+
+    ESTADO_CHOICES = [
+        ('NUEVO', 'Nuevo'),
+        ('DESCUENTO', 'Descuento'),
+        ('COMUN', 'Común'),
+    ]
+    estado = models.CharField(max_length=10, choices=ESTADO_CHOICES, default='NUEVO')
+
+    def save(self, *args, **kwargs):
+        iva = Decimal('1.19')  # IVA como Decimal
+        self.precio_sin_iva = (self.precio / iva).quantize(Decimal('0.01'))  # redondeo a 2 decimales
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return self.nombre
+
 
 class DisponibilidadPlato(models.Model):
     DIAS_SEMANA = [

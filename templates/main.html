@@ -6,10 +6,16 @@
   <meta charset="UTF-8">
   <title>Menú Semanal</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
       --rojo-empresa: #b71c1c;
       --rojo-claro: #d32f2f;
+    }
+
+    body {
+      font-family: 'Nunito', sans-serif;
     }
 
     .navbar-custom {
@@ -62,24 +68,333 @@
       background-color: var(--rojo-claro);
       transform: scale(1.05);
     }
+
+    .transition-navbar {
+      transition: all 0.3s ease;
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+    }
+
+    .navbar-shrink {
+      padding-top: 0.3rem !important;
+      padding-bottom: 0.3rem !important;
+    }
+
+    .dias-scroll {
+      white-space: nowrap;
+      scrollbar-width: thin;
+    }
+
+    .dias-scroll::-webkit-scrollbar {
+      height: 6px;
+    }
+
+    .dias-scroll::-webkit-scrollbar-thumb {
+      background: var(--rojo-empresa);
+      border-radius: 5px;
+    }
+
+    .dias-scroll form {
+      flex-shrink: 0;
+    }
+
+    .dias-scroll .btn.active {
+      background-color: var(--rojo-empresa);
+      color: white;
+    }
+
+    .transition {
+  transition: all 0.3s ease-in-out;
+}
+
+/* Cambia altura del nav al hacer scroll */
+    .shrink {
+      padding-top: 0.3rem !important;
+      padding-bottom: 0.3rem !important;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    #mainNav {
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+    }
+
+    /* Modal contenido */
+#infoPlatoModal .modal-content {
+  border-radius: 20px;
+  box-shadow: 0 8px 25px rgba(183, 28, 28, 0.3);
+  border: none;
+  background: #fff8f8;
+}
+
+/* Cabecera del modal */
+#infoPlatoModal .modal-header {
+  background: linear-gradient(135deg, var(--rojo-empresa), var(--rojo-claro));
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  color: white;
+  box-shadow: 0 3px 10px rgba(183, 28, 28, 0.6);
+}
+
+/* Título del modal */
+#infoPlatoModalLabel {
+  font-weight: 900;
+  font-size: 2.5rem;
+  letter-spacing: 1.2px;
+}
+
+/* Botón cerrar */
+#infoPlatoModal .btn-close {
+  filter: brightness(130%);
+  opacity: 1;
+  transition: filter 0.3s ease;
+}
+
+#infoPlatoModal .btn-close:hover {
+  filter: brightness(160%);
+}
+
+/* Imagen del plato */
+#infoPlatoImagen {
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(183, 28, 28, 0.4);
+  max-height: 320px;
+  width: 100%;
+  object-fit: cover;
+}
+
+/* Descripción */
+#infoPlatoDescripcion {
+  font-style: italic;
+  font-size: 1.25rem;
+  color: #5a5a5a;
+  margin-bottom: 1.5rem;
+}
+
+/* Sección Datos Básicos */
+#infoPlatoModal .fw-semibold.text-primary {
+  color: var(--rojo-empresa);
+  font-weight: 700;
+  border-bottom: 2px solid var(--rojo-empresa);
+  padding-bottom: 4px;
+  margin-bottom: 1rem;
+}
+
+#infoPlatoModal .text-secondary {
+  color: #666666;
+}
+
+/* Informe nutricional */
+#infoPlatoModal .modal-body > .container-fluid > .row > div > div.mb-4.p-3.border.rounded {
+  background-color: #fff0f0;
+  border-color: var(--rojo-claro);
+  box-shadow: inset 0 0 10px rgba(211, 47, 47, 0.1);
+}
+
+#infoPlatoModal h6.fw-semibold.text-primary.mb-3 {
+  color: var(--rojo-claro);
+  font-weight: 700;
+}
+
+/* Texto nutricional */
+#infoPlatoModal .text-secondary.fs-6 strong {
+  color: var(--rojo-empresa);
+}
+
+/* Para un poco de espacio abajo */
+#infoPlatoModal .modal-body {
+  padding-bottom: 2rem;
+}
+
+/* Mejor distribución responsive */
+@media (max-width: 767px) {
+  #infoPlatoImagen {
+    max-height: 220px;
+    margin-bottom: 1rem;
+  }
+  #infoPlatoModalLabel {
+    font-size: 1.75rem;
+  }
+  #infoPlatoDescripcion {
+    font-size: 1rem;
+  }
+}
+
+/* Mejoras generales */
+body {
+  background-color: #fafafa;
+  color: #333;
+}
+
+h1, h2, h5 {
+  font-weight: 700;
+  color: #222;
+}
+
+.card-body {
+  padding: 1.25rem;
+}
+
+.card h5 {
+  font-size: 1.25rem;
+  color: var(--rojo-empresa);
+}
+
+.card:hover {
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+  transform: translateY(-2px);
+  transition: all 0.3s ease;
+}
+
+/* Mejora en la barra de días */
+.dias-scroll button {
+  border-radius: 50px;
+  padding: 0.5rem 1.25rem;
+  font-weight: 600;
+}
+
+/* Responsive navbar padding */
+@media (max-width: 991px) {
+  .navbar-custom {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+/* Mejoras específicas móviles */
+@media (max-width: 767px) {
+  .navbar-brand img {
+    height: 45px;
+  }
+
+  .btn-carrito {
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+    bottom: 16px;
+    right: 16px;
+  }
+
+  .dias-scroll {
+    gap: 0.5rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .card {
+    padding: 1rem;
+    font-size: 1.05rem;
+  }
+
+  .card-img-top {
+    height: 180px; /* aumentamos desde 150px */
+  }
+
+  .card h5 {
+    font-size: 1.4rem;
+  }
+}
+
+
+@media (max-width: 767px) {
+  .dias-scroll button {
+    font-size: 1rem;
+    padding: 0.6rem 1.5rem;
+    border-radius: 999px;
+  }
+
+  .dias-scroll {
+    margin-left: -0.5rem;
+    margin-right: -0.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .btn-carrito {
+    width: 44px;
+    height: 44px;
+    font-size: 18px;
+  }
+}
+
+.dias-scroll-wrapper {
+  background-color: white;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  border-bottom: 1px solid #eee;
+}
+
+.dias-scroll-wrapper > .container-fluid {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+.dias-scroll {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+#infoPlatoModal .modal-dialog {
+  max-width: 600px; /* Puedes ajustar este valor según necesites */
+  margin: 1.75rem auto;
+}
+
+.estado-badge {
+  padding: 0.4rem 0.7rem;
+  font-size: 0.75rem;
+  border-radius: 1rem;
+  font-weight: 700;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+}
+
+.estado-badge.nuevo {
+  background: linear-gradient(135deg, #1e90ff, #0066cc); /* azul llamativo */
+  animation: pulse-blue 2s infinite;
+}
+
+.estado-badge.descuento {
+  background: linear-gradient(135deg, #ff4d4d, #cc0000); /* rojo intenso */
+  animation: pulse-red 2s infinite;
+}
+
+@keyframes pulse-blue {
+  0% { box-shadow: 0 0 0 0 rgba(30, 144, 255, 0.7); }
+  70% { box-shadow: 0 0 0 10px rgba(30, 144, 255, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(30, 144, 255, 0); }
+}
+
+@keyframes pulse-red {
+  0% { box-shadow: 0 0 0 0 rgba(255, 77, 77, 0.7); }
+  70% { box-shadow: 0 0 0 10px rgba(255, 77, 77, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 77, 77, 0); }
+}
   </style>
 </head>
 
-<body>
+<body style="padding-top: 60px;">
+
 
 <!-- NAV -->
-<nav class="navbar navbar-expand-lg navbar-light navbar-custom shadow-sm">
-  <div class="container">
-    <a class="navbar-brand" href="#">
-      <img src="{% static 'img/imagen1-removebg-preview.png' %}" alt="el logo" height="40">
-    </a>
+<nav class="navbar navbar-expand-lg navbar-light navbar-custom shadow-sm fixed-top transition-navbar">
+  <div class="container-fluid">
+    <a class="navbar-brand d-flex align-items-center gap-2 text-decoration-none" href="/" style="color: #b71c1c;">
+  <i class='bx bx-arrow-back' style='font-size: 1.5rem; color: #b71c1c;'></i>
+  <img src="{% static 'img/imagen1-removebg-preview.png' %}" alt="el logo" style="height: 55px;">
+</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ms-auto">
-        <li class="nav-item"><a class="nav-link active" href="/">Inicio</a></li>
-        <li class="nav-item"><a class="nav-link" href="#">Nosotros</a></li>
         <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Salir</a></li>
       </ul>
     </div>
@@ -87,47 +402,82 @@
 </nav>
 
 <!-- MAIN -->
-<div class="container my-5">
+<div class="container-fluid px-3 my-5">
   <h1 class="mb-4 text-dark">Selecciona un día de la semana</h1>
 
-  <form method="get" action="{% url 'main' %}" class="mb-5">
-    <div class="mb-3">
-      <label for="dia" class="form-label">Día:</label>
-      <select name="dia" id="dia" class="form-select w-auto d-inline-block" onchange="this.form.submit()">
-        {% for codigo, nombre in dias_semana.items %}
-          <option value="{{ codigo }}" {% if dia_actual == codigo %}selected{% endif %}>{{ nombre }}</option>
-        {% endfor %}
-      </select>
-    </div>
-  </form>
+  <section class="sticky-top dias-scroll-wrapper" style="top: 70px; z-index: 1020; background-color: #fdecea;">
 
-  <h2 class="mb-4 text-success">Platos disponibles el {{ dia_actual_nombre }}</h2>
+  <div class="container-fluid py-2 px-2 shadow-sm transition">
+    <div class="dias-scroll d-flex overflow-auto gap-2">
+      {% for codigo, nombre in dias_semana.items %}
+        <form method="get" action="{% url 'main' %}">
+          <input type="hidden" name="dia" value="{{ codigo }}">
+          <button type="submit" class="btn btn-outline-danger {% if dia_actual == codigo %}active{% endif %}">
+            {{ nombre }}
+          </button>
+        </form>
+      {% endfor %}
+    </div>
+  </div>
+  </section>
+
+  <h2 class="mb-4 fw-bold text-success">Platos disponibles el {{ dia_actual_nombre }}</h2>
   {% if disponibles %}
     <div class="row row-cols-1 row-cols-md-3 g-4 mb-5">
       {% for disp in disponibles %}
         <div class="col">
-          <div class="card h-100 shadow-sm">
-            {% if disp.plato.imagen %}
-              <img src="{{ disp.plato.imagen.url }}" class="card-img-top" alt="{{ disp.plato.nombre }}">
-            {% endif %}
-            <div class="card-body">
-              <h5 class="card-title">{{ disp.plato.nombre }}</h5>
-              <p class="card-text text-muted">{{ disp.plato.descripcion }}</p>
-              <p class="fw-bold text-primary">Precio: €{{ disp.plato.precio }}</p>
+      <div class="card d-flex flex-column h-100 shadow-sm clickable-card position-relative"
+     data-nombre="{{ disp.plato.nombre|escapejs }}"
+     data-descripcion="{{ disp.plato.descripcion|escapejs }}"
+     data-precio="{{ disp.plato.precio }}"
+     {% if disp.plato.imagen %}
+       data-imagen="{{ disp.plato.imagen.url }}"
+     {% else %}
+       data-imagen=""
+     {% endif %}
+     data-grupo="{{ disp.plato.get_grupo_display|escapejs }}"
+     data-kilogramos="{{ disp.plato.kilogramos }}"
+     data-vida-util="{{ disp.plato.vida_util|escapejs }}"
+     data-calorias="{{ disp.plato.calorias|default:'' }}"
+     data-proteinas="{{ disp.plato.proteinas|default:'' }}"
+     data-grasa="{{ disp.plato.grasa|default:'' }}"
+     data-carbohidratos="{{ disp.plato.carbohidratos|default:'' }}"
+     data-sodio="{{ disp.plato.sodio|default:'' }}"
+     data-ingredientes="{{ disp.plato.ingredientes|escapejs }}"
+     data-alergenos="{{ disp.plato.alergenos|escapejs }}"
+     style="cursor: pointer;"
+      >
 
-              <form method="post" action="">
-                {% csrf_token %}
-                <input type="hidden" name="plato_id" value="{{ disp.plato.id }}">
-                <input type="hidden" name="dia_semana" value="{{ dia_actual }}">
-                <div class="mb-3">
-                  <label class="form-label">Cantidad:</label>
-                  <input type="number" name="cantidad" value="1" min="1" class="form-control w-50">
-                </div>
-                <button type="submit" class="btn btn-outline-primary w-100">Agregar al carrito</button>
-              </form>
-            </div>
-          </div>
+  {% if disp.plato.estado != "COMUN" %}
+  <div class="position-absolute top-0 start-0 m-2">
+    <span class="badge estado-badge {{ disp.plato.estado|lower }}">
+      {{ disp.plato.get_estado_display }}
+    </span>
+  </div>
+{% endif %}
+
+  {% if disp.plato.imagen %}
+    <img src="{{ disp.plato.imagen.url }}" class="card-img-top" alt="{{ disp.plato.nombre }}">
+  {% endif %}
+  <div class="card-body">
+    <h5 class="card-title">{{ disp.plato.nombre }}</h5>
+    <p class="card-text text-muted">{{ disp.plato.descripcion }}</p>
+    <p class="fw-bold text-primary">Precio: €{{ disp.plato.precio }}</p>
+
+    <form method="post" action="">
+      {% csrf_token %}
+      <input type="hidden" name="plato_id" value="{{ disp.plato.id }}">
+      <input type="hidden" name="dia_semana" value="{{ dia_actual }}">
+      <div class="mb-3">
+        <label class="form-label">Cantidad:</label>
+        <input type="number" name="cantidad" value="1" min="1" class="form-control w-50">
+      </div>
+      <button type="submit" class="btn btn-outline-primary w-100">Agregar al carrito</button>
+    </form>
+  </div>
+</div>
         </div>
+
       {% endfor %}
     </div>
   {% else %}
@@ -179,6 +529,151 @@
 </div>
 {% endif %}
 
+<!-- Modal info plato -->
+<div class="modal fade" id="infoPlatoModal" tabindex="-1" aria-labelledby="infoPlatoModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-xl"> <!-- más ancho -->
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title fw-bold fs-3" id="infoPlatoModalLabel">Nombre Plato</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <div class="container-fluid">
+          <div class="row flex-column align-items-center text-center">
+            <!-- Imagen -->
+            <div class="col-md-8 col-lg-6 mb-3">
+              <img id="infoPlatoImagen" src="" alt="" class="img-fluid rounded shadow-sm mx-auto d-block" style="object-fit: cover; max-height: 280px; width: 100%;">
+            </div>
+
+            <!-- Información principal -->
+            <div class="col-md-10">
+              <p id="infoPlatoDescripcion" class="fst-italic fs-5 mb-4 text-secondary"></p>
+
+              <!-- Datos básicos -->
+              <div class="mb-4">
+                <h6 class="fw-semibold text-primary">Datos Básicos</h6>
+                <div class="row text-secondary">
+                  <div class="col-sm-6 mb-2"><strong>Grupo:</strong> <span id="infoPlatoGrupo"></span></div>
+                  <div class="col-sm-6 mb-2"><strong>Peso (kg):</strong> <span id="infoPlatoKg"></span></div>
+                  <div class="col-sm-6 mb-2"><strong>Vida útil:</strong> <span id="infoPlatoVidaUtil"></span></div>
+                  <div class="col-sm-6 mb-2"><strong>Precio:</strong> €<span id="infoPlatoPrecio"></span></div>
+                </div>
+              </div>
+
+              <!-- Informe nutricional -->
+              <div class="mb-4 p-3 border rounded" style="background-color: #f9fafb;">
+                <h6 class="fw-semibold text-primary mb-3">Informe Nutricional</h6>
+                <div class="row text-secondary fs-6">
+                  <div class="col-sm-4 mb-2"><strong>Calorías:</strong> <span id="infoPlatoCalorias"></span> kcal</div>
+                  <div class="col-sm-4 mb-2"><strong>Proteínas:</strong> <span id="infoPlatoProteinas"></span> g</div>
+                  <div class="col-sm-4 mb-2"><strong>Grasa:</strong> <span id="infoPlatoGrasa"></span> g</div>
+                  <div class="col-sm-4 mb-2"><strong>Carbohidratos:</strong> <span id="infoPlatoCarbohidratos"></span> g</div>
+                  <div class="col-sm-4 mb-2"><strong>Sodio:</strong> <span id="infoPlatoSodio"></span> mg</div>
+                </div>
+              </div>
+
+              <!-- Ingredientes y alérgenos -->
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <div class="p-3 border rounded" style="max-height: 140px; overflow-y: auto; background-color: #fff;">
+                    <h6 class="fw-semibold text-primary mb-2">Ingredientes</h6>
+                    <p id="infoPlatoIngredientes" class="text-secondary fs-6"></p>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="p-3 border rounded" style="max-height: 140px; overflow-y: auto; background-color: #fff;">
+                    <h6 class="fw-semibold text-primary mb-2">Alérgenos</h6>
+                    <p id="infoPlatoAlergenos" class="text-secondary fs-6"></p>
+                  </div>
+                </div>
+              </div>
+            </div> <!-- fin col info -->
+          </div> <!-- fin row -->
+        </div> <!-- fin container -->
+      </div> <!-- fin modal-body -->
+    </div>
+  </div>
+</div>
+
+
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+  const cards = document.querySelectorAll('.clickable-card');
+  const modal = new bootstrap.Modal(document.getElementById('infoPlatoModal'));
+
+  cards.forEach(card => {
+    card.addEventListener('click', function (event) {
+      if (event.target.closest('form')) return;
+
+      // Leer info desde atributos data
+      const nombre = this.getAttribute('data-nombre');
+      const descripcion = this.getAttribute('data-descripcion');
+      const precio = this.getAttribute('data-precio');
+      const imagen = this.getAttribute('data-imagen');
+
+      // Nuevos campos
+      const grupo = this.getAttribute('data-grupo');
+      const kilogramos = this.getAttribute('data-kilogramos');
+      const vida_util = this.getAttribute('data-vida-util');
+
+      const calorias = this.getAttribute('data-calorias');
+      const proteinas = this.getAttribute('data-proteinas');
+      const grasa = this.getAttribute('data-grasa');
+      const carbohidratos = this.getAttribute('data-carbohidratos');
+      const sodio = this.getAttribute('data-sodio');
+
+      const ingredientes = this.getAttribute('data-ingredientes');
+      const alergenos = this.getAttribute('data-alergenos');
+
+      // Setear contenido modal
+      document.getElementById('infoPlatoModalLabel').textContent = nombre;
+      document.getElementById('infoPlatoDescripcion').textContent = descripcion || "Sin descripción disponible";
+      document.getElementById('infoPlatoPrecio').textContent = precio;
+      document.getElementById('infoPlatoImagen').src = imagen || "";
+      document.getElementById('infoPlatoImagen').style.display = imagen ? 'block' : 'none';
+
+      document.getElementById('infoPlatoGrupo').textContent = grupo || "-";
+      document.getElementById('infoPlatoKg').textContent = kilogramos || "-";
+      document.getElementById('infoPlatoVidaUtil').textContent = vida_util || "-";
+
+      document.getElementById('infoPlatoCalorias').textContent = calorias || "-";
+      document.getElementById('infoPlatoProteinas').textContent = proteinas || "-";
+      document.getElementById('infoPlatoGrasa').textContent = grasa || "-";
+      document.getElementById('infoPlatoCarbohidratos').textContent = carbohidratos || "-";
+      document.getElementById('infoPlatoSodio').textContent = sodio || "-";
+
+      document.getElementById('infoPlatoIngredientes').textContent = ingredientes || "No disponible";
+      document.getElementById('infoPlatoAlergenos').textContent = alergenos || "No disponible";
+
+      modal.show();
+    });
+  });
+});
+
+</script>
+
+<script>
+  window.addEventListener('scroll', function () {
+    const navbar = document.querySelector('.transition-navbar');
+    if (window.scrollY > 10) {
+      navbar.classList.add('navbar-shrink');
+    } else {
+      navbar.classList.remove('navbar-shrink');
+    }
+  });
+
+   window.addEventListener('scroll', function () {
+    const nav = document.getElementById('mainNav');
+    if (window.scrollY > 50) {
+      nav.classList.add('shrink');
+    } else {
+      nav.classList.remove('shrink');
+    }
+  });
+</script>
+
 </body>
 </html>
